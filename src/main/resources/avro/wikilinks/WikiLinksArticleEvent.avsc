@@ -1,0 +1,60 @@
+{
+  "type": "record",
+  "name": "WikiLinksArticleEvent",
+  "namespace": "net.acilab.stream.processor.wikilinks.serialization",
+  "doc": "This schema is defined for WikiLinks article events",
+  "fields": [
+    {
+      "name": "url",
+      "type": "string"
+    },
+    {
+      "name": "Mentions",
+      "type":{
+        "type": "array",
+        "items": [
+          {
+            "type": "record",
+            "name": "Mention",
+            "fields": [
+              {
+                "name": "mentionstring",
+                "type": "string"
+              },
+              {
+                "name": "byteoffset",
+                "type": "long"
+              },
+              {
+                "name": "targeturl",
+                "type": "string"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tokens",
+      "type": {
+        "type": "array",
+        "items": [
+          {
+            "type": "record",
+            "name": "Token",
+            "fields": [
+              {
+                "name": "tokenstring",
+                "type": "string"
+              },
+              {
+                "name": "byteoffset",
+                "type": "long"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

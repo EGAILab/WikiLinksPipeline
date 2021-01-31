@@ -77,6 +77,10 @@ public class TestDataFactory {
     return "F:\\Data\\wiki-links_google\\data-0-of-9";
   }
 
+  public String getFirstPointerFile() {
+    return "F:\\Data\\wiki-links_google\\data-0-of-9_pointer.txt";
+  }
+
   public String getFileNotExist() {
     return "F:\\Data\\wiki-links_google\\data-00-of-9";
   }

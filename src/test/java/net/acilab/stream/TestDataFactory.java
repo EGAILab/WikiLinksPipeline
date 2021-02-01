@@ -85,7 +85,7 @@ public class TestDataFactory {
     return "F:\\Data\\wiki-links_google\\data-00-of-9";
   }
 
-  public WikiLinksArticleEvent getFirstFileFirstEvent() {
+  public WikiLinksArticleEvent getFirstFileEventOne() {
     Mention mention1 = Mention.newBuilder().setMentionstring("r NetBIOS").setByteoffset(176937)
         .setTargeturl("http://en.wikipedia.org/wiki/NetBIOS").build();
 
@@ -109,11 +109,7 @@ public class TestDataFactory {
     return event;
   }
 
-  public String getFirstFileSecondEventOffset() {
-    return "349";
-  }
-
-  public WikiLinksArticleEvent getFirstFileSecondEvent() {
+  public WikiLinksArticleEvent getFirstFileEventTwo() {
     Mention mention1 = Mention.newBuilder().setMentionstring("NetBIOS").setByteoffset(176937)
         .setTargeturl("http://en.wikipedia.org/wiki/NetBIOS").build();
 
@@ -137,16 +133,69 @@ public class TestDataFactory {
     return event;
   }
 
-  public String getFirstFileEndOfFileOffset() {
-    return "592017993";
+  public WikiLinksArticleEvent getFirstFileEventFour() {
+    Mention mention1 = Mention.newBuilder().setMentionstring("bootstrapping").setByteoffset(598297)
+        .setTargeturl("http://en.wikipedia.org/wiki/Bootstrapping").build();
+
+    Token token1 = Token.newBuilder().setTokenstring("reducing").setByteoffset(518133).build();
+    Token token2 = Token.newBuilder().setTokenstring("linked").setByteoffset(68739).build();
+    Token token3 = Token.newBuilder().setTokenstring("locked").setByteoffset(338757).build();
+    Token token4 = Token.newBuilder().setTokenstring("input").setByteoffset(303071).build();
+    Token token5 = Token.newBuilder().setTokenstring("named").setByteoffset(391287).build();
+    Token token6 = Token.newBuilder().setTokenstring("would").setByteoffset(517889).build();
+    Token token7 = Token.newBuilder().setTokenstring("red").setByteoffset(550911).build();
+    Token token8 = Token.newBuilder().setTokenstring("ROM").setByteoffset(85363).build();
+    Token token9 = Token.newBuilder().setTokenstring("Link").setByteoffset(414545).build();
+    Token token10 = Token.newBuilder().setTokenstring("globally").setByteoffset(359504).build();
+
+    WikiLinksArticleEvent event = WikiLinksArticleEvent.newBuilder().setUrl(
+        "ftp://Autoidread:read@ftp.rrc.ru/!!!Motorola/Motorola%20MSP%20SCHOOL/Moscow%20Oct%202010/student/091102_MCD_Class.pdf")
+        .setMentions(Arrays.asList(mention1))
+        .setTokens(Arrays.asList(token1, token2, token3, token4, token5, token6, token7, token8, token9, token10))
+        .build();
+
+    return event;
   }
 
-  public String getFirstFileCurrentOffset() throws Exception {
+  public WikiLinksArticleEvent getFirstFileLastEvent() {
+    Mention mention1 = Mention.newBuilder().setMentionstring("bootstrapping").setByteoffset(12382)
+        .setTargeturl("http://en.wikipedia.org/wiki/Auto-Tune").build();
+
+    Token token1 = Token.newBuilder().setTokenstring("reality").setByteoffset(8435).build();
+    Token token2 = Token.newBuilder().setTokenstring("haven").setByteoffset(8529).build();
+    Token token3 = Token.newBuilder().setTokenstring("non").setByteoffset(8482).build();
+    Token token4 = Token.newBuilder().setTokenstring("link").setByteoffset(13184).build();
+    Token token5 = Token.newBuilder().setTokenstring("night").setByteoffset(8807).build();
+    Token token6 = Token.newBuilder().setTokenstring("alum").setByteoffset(12205).build();
+    Token token7 = Token.newBuilder().setTokenstring("twitter").setByteoffset(13390).build();
+    Token token8 = Token.newBuilder().setTokenstring("Spears").setByteoffset(8794).build();
+    Token token9 = Token.newBuilder().setTokenstring("think").setByteoffset(12936).build();
+    Token token10 = Token.newBuilder().setTokenstring("Pratt").setByteoffset(12926).build();
+
+    WikiLinksArticleEvent event = WikiLinksArticleEvent.newBuilder()
+        .setUrl("https://zzzlist.wordpress.com/tag/heidi-montag-spencer-pratt/").setMentions(Arrays.asList(mention1))
+        .setTokens(Arrays.asList(token1, token2, token3, token4, token5, token6, token7, token8, token9, token10))
+        .build();
+
+    return event;
+  }
+
+  public long[] getFirstFileOffsets() {
+    long[] offsets = { 0l, 349l, 677l, 1597l, 1984l, 2421l, 6971l };
+    return offsets;
+  }
+
+  public long[] getFirstFileEndOfFileOffsets() {
+    long[] offsets = { 592017993l, 59207685l, 592017302 };
+    return offsets;
+  }
+
+  public long getFirstFileCurrentOffset() throws Exception {
     String firstPointerFile = "F:\\Data\\wiki-links_google\\data-0-of-9_pointer.txt";
     BufferedReader bufferReader;
 
     bufferReader = new BufferedReader(new FileReader(firstPointerFile));
-    String offset = bufferReader.readLine();
+    long offset = Long.valueOf(bufferReader.readLine());
     bufferReader.close();
     return offset;
   }

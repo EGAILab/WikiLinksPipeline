@@ -44,33 +44,32 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
     this.fileConfigBuilder = fileConfigBuilder;
   }
 
-  private String readOffset() throws Exception {
+  private long readOffset() throws Exception {
     if (!(new File(eventPointerFile).exists())) {
       // file doesn't exist, return position 0
-      return "0";
+      return 0;
     } else {
       bufferReader = new BufferedReader(new FileReader(eventPointerFile));
       String offset = bufferReader.readLine();
       bufferReader.close();
-      return offset;
+      return Long.parseLong(offset);
     }
   }
 
-  private void writeOffset(String offset) throws Exception {
-    bufferWriter = new BufferedWriter(new FileWriter(eventPointerFile, false));
-    bufferWriter.write(offset);
-    bufferWriter.close();
-  }
+  // private void writeOffset(String offset) throws Exception {
+  // bufferWriter = new BufferedWriter(new FileWriter(eventPointerFile, false));
+  // bufferWriter.write(offset);
+  // bufferWriter.close();
+  // }
 
   @Override
-  public List<Object> readNextEvent(int fileIndex) {
+  public List<Object> readNextEvent(int fileIndex, int batchSize) {
     LOGGER.info("=== Starting WikiLinksEventFileProcessor ===");
 
     List<Object> mentions = new ArrayList<Object>();
     List<Object> tokens = new ArrayList<Object>();
     String url = "";
-    // empty event
-    wikiLinksEvent = WikiLinksArticleEvent.newBuilder().setUrl(url).setMentions(mentions).setTokens(tokens).build();
+    List<WikiLinksArticleEvent> wikiLinksEventList = new ArrayList<WikiLinksArticleEvent>();
 
     try {
       if (!ApplicationConstants.EVENT_FILE_INDEX_RANGE.contains(fileIndex)) {
@@ -82,49 +81,54 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
       LOGGER.info("Event file is: {}", eventFile);
       LOGGER.info("Event pointer file is: {}", eventPointerFile);
 
-      long offset = Long.parseLong(readOffset());
-      LOGGER.info("Offset is: {}", offset);
-
+      long initOffset = readOffset();
+      LOGGER.info("Read starting from offset: {}", initOffset);
       eventFileStream = new RandomAccessFile(eventFile, "r");
-      eventFileStream.seek(offset);
+      eventFileStream.seek(initOffset);
 
       int newline_count = 0;
       String line = "";
-      while (true) {
-        if ((line = eventFileStream.readLine()) == null) {
-          // end of the file, return empty event, caller needs to handle this
-          eventFileStream.close();
-          return Arrays.asList(wikiLinksEvent, offset);
-        } else {
-          // event: [URL][MENTION...][TOKEN...]
-          if (line.startsWith("URL")) {
-            url = line.split("\t")[1];
-            newline_count = 0;
-          }
-          if (line.startsWith("MENTION")) {
-            Mention mention = Mention.newBuilder().setMentionstring(line.split("\t")[1])
-                .setByteoffset(Long.parseLong(line.split("\t")[2])).setTargeturl(line.split("\t")[3]).build();
-            mentions.add(mention);
-            newline_count = 0;
-          }
-          if (line.startsWith("TOKEN")) {
-            Token token = Token.newBuilder().setTokenstring(line.split("\t")[1])
-                .setByteoffset(Long.parseLong(line.split("\t")[2])).build();
-            tokens.add(token);
-            newline_count = 0;
-          }
+      long endOffset = initOffset;
 
-          newline_count++;
-          // end of event
-          if (newline_count == 3) {
-            wikiLinksEvent = WikiLinksArticleEvent.newBuilder().setUrl(url).setMentions(mentions).setTokens(tokens)
-                .build();
-            long new_offset = eventFileStream.getFilePointer();
-            writeOffset(Long.toString(new_offset));
-            return Arrays.asList(wikiLinksEvent, offset);
+      for (int i = 0; i < batchSize; i++) {
+        while (true) {
+          if ((line = eventFileStream.readLine()) == null) {
+            // end of the file, return empty list, caller needs to handle this
+            endOffset = eventFileStream.getFilePointer();
+            return Arrays.asList(wikiLinksEventList, endOffset);
+          } else {
+            // event: [URL][MENTION...][TOKEN...]
+            if (line.startsWith("URL")) {
+              url = line.split("\t")[1];
+              newline_count = 0;
+            }
+            if (line.startsWith("MENTION")) {
+              Mention mention = Mention.newBuilder().setMentionstring(line.split("\t")[1])
+                  .setByteoffset(Long.parseLong(line.split("\t")[2])).setTargeturl(line.split("\t")[3]).build();
+              mentions.add(mention);
+              newline_count = 0;
+            }
+            if (line.startsWith("TOKEN")) {
+              Token token = Token.newBuilder().setTokenstring(line.split("\t")[1])
+                  .setByteoffset(Long.parseLong(line.split("\t")[2])).build();
+              tokens.add(token);
+              newline_count = 0;
+            }
+
+            newline_count++;
+            // end of event
+            if (newline_count == 3) {
+              wikiLinksEvent = WikiLinksArticleEvent.newBuilder().setUrl(url).setMentions(mentions).setTokens(tokens)
+                  .build();
+              wikiLinksEventList.add(wikiLinksEvent);
+              break;
+            }
           }
         }
       }
+      endOffset = eventFileStream.getFilePointer();
+      // writeOffset(Long.toString(endOffset));
+      return Arrays.asList(wikiLinksEventList, endOffset);
     } catch (IOException ioe) {
       LOGGER.error("IO error in reading file.");
       ioe.printStackTrace();
@@ -150,16 +154,17 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
   // 1 - successful
   // 0 - failed
-  public int rollbackOffset(String offset) {
-    BufferedWriter rollbackBufferWriter;
+  public int commitOffset(long offset, int fileIndex) {
+    BufferedWriter commitOffsetBufferWriter;
+    String eventPointerFileToCommit = fileConfigBuilder.getEventPointerFileList().get(fileIndex);
     try {
-      rollbackBufferWriter = new BufferedWriter(new FileWriter(eventPointerFile, false));
-      rollbackBufferWriter.write(offset);
-      rollbackBufferWriter.close();
+      commitOffsetBufferWriter = new BufferedWriter(new FileWriter(eventPointerFileToCommit, false));
+      commitOffsetBufferWriter.write(Long.toString(offset));
+      commitOffsetBufferWriter.close();
       return 1;
     } catch (Exception e) {
       e.printStackTrace();
-      LOGGER.error("Error in rolling back offset, error is: {}", e.toString());
+      LOGGER.error("Error in committing offset, error is: {}", e.toString());
       return 0;
     }
   }

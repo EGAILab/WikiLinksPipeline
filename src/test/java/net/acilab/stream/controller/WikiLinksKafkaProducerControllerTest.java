@@ -4,6 +4,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,6 +16,7 @@ import net.acilab.stream.TestDataFactory;
 import net.acilab.stream.processor.kafka.WikiLinksKafkaProducerRunable;
 import net.acilab.stream.processor.kafka.configuration.KafkaProducerThroughputConfigBuilder;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class WikiLinksKafkaProducerControllerTest {
 

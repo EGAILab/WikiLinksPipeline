@@ -42,6 +42,6 @@ public class WikiLinksKafkaProducerRunable implements ProducerRunable, Runnable 
     producer.close();
     LOGGER.info("Producer closed.");
 
-    eventFileProcessor.readNextEvent(this.fileIndex);
+    eventFileProcessor.readNextEvent(this.fileIndex, 1);
   }
 }

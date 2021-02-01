@@ -44,3 +44,18 @@ pom - Origin Version:
 
 </project>
 
+
+
+          producer.send(producerRecord, new Callback() {
+            @Override
+            public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+              if (e != null) {
+                LOGGER.error("Callback::Error while producing message to topic: {}", recordMetadata.topic());
+                e.printStackTrace();
+              } else {
+                LOGGER.info("Sent message to topic:{} partition:{} offset:{}", recordMetadata.topic(),
+                    recordMetadata.partition(), recordMetadata.offset());
+              }
+            }
+          });
+          producer.flush();

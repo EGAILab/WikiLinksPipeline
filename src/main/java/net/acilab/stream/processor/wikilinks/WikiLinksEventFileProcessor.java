@@ -37,7 +37,6 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
   private BufferedReader bufferReader;
   private BufferedWriter bufferWriter;
   private RandomAccessFile eventFileStream;
-  private WikiLinksArticleEvent wikiLinksEvent;
 
   @Inject
   public WikiLinksEventFileProcessor(WikiLinksEventFileConfigBuilder fileConfigBuilder) {
@@ -56,14 +55,8 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
     }
   }
 
-  // private void writeOffset(String offset) throws Exception {
-  // bufferWriter = new BufferedWriter(new FileWriter(eventPointerFile, false));
-  // bufferWriter.write(offset);
-  // bufferWriter.close();
-  // }
-
   @Override
-  public List<Object> readNextEvent(int fileIndex, int batchSize) {
+  public List<Object> readEvents(int fileIndex, int batchSize) {
     LOGGER.info("=== Starting WikiLinksEventFileProcessor ===");
 
     List<Object> mentions = new ArrayList<Object>();
@@ -118,8 +111,8 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
             newline_count++;
             // end of event
             if (newline_count == 3) {
-              wikiLinksEvent = WikiLinksArticleEvent.newBuilder().setUrl(url).setMentions(mentions).setTokens(tokens)
-                  .build();
+              WikiLinksArticleEvent wikiLinksEvent = WikiLinksArticleEvent.newBuilder().setUrl(url)
+                  .setMentions(mentions).setTokens(tokens).build();
               wikiLinksEventList.add(wikiLinksEvent);
               break;
             }
@@ -127,7 +120,6 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
         }
       }
       endOffset = eventFileStream.getFilePointer();
-      // writeOffset(Long.toString(endOffset));
       return Arrays.asList(wikiLinksEventList, endOffset);
     } catch (IOException ioe) {
       LOGGER.error("IO error in reading file.");

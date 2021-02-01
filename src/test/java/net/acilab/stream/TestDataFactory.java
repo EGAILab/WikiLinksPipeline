@@ -133,6 +133,44 @@ public class TestDataFactory {
     return event;
   }
 
+  public WikiLinksArticleEvent getFirstFileEventThree() {
+    Mention mention1 = Mention.newBuilder().setMentionstring("Microsoft").setByteoffset(80679)
+        .setTargeturl("http://en.wikipedia.org/wiki/Microsoft").build();
+    Mention mention2 = Mention.newBuilder().setMentionstring("Microsoft").setByteoffset(134415)
+        .setTargeturl("http://en.wikipedia.org/wiki/Microsoft").build();
+    Mention mention3 = Mention.newBuilder().setMentionstring("Windows Server 2008").setByteoffset(80862)
+        .setTargeturl("http://en.wikipedia.org/wiki/Windows_Server_2008").build();
+    Mention mention4 = Mention.newBuilder().setMentionstring("Windows Server 2008").setByteoffset(134744)
+        .setTargeturl("http://en.wikipedia.org/wiki/Windows_Server_2008").build();
+    Mention mention5 = Mention.newBuilder().setMentionstring("Windows 7").setByteoffset(81028)
+        .setTargeturl("http://en.wikipedia.org/wiki/Windows_7").build();
+    Mention mention6 = Mention.newBuilder().setMentionstring("Windows 7").setByteoffset(134910)
+        .setTargeturl("http://en.wikipedia.org/wiki/Windows_7").build();
+    Mention mention7 = Mention.newBuilder().setMentionstring("operating systems.").setByteoffset(81109)
+        .setTargeturl("http://en.wikipedia.org/wiki/Operating_system").build();
+    Mention mention8 = Mention.newBuilder().setMentionstring("Windows Vista").setByteoffset(134573)
+        .setTargeturl("http://en.wikipedia.org/wiki/Windows_Vista").build();
+
+    Token token1 = Token.newBuilder().setTokenstring("Fresh").setByteoffset(54828).build();
+    Token token2 = Token.newBuilder().setTokenstring("evidence").setByteoffset(32081).build();
+    Token token3 = Token.newBuilder().setTokenstring("Allow").setByteoffset(72597).build();
+    Token token4 = Token.newBuilder().setTokenstring("operator").setByteoffset(148693).build();
+    Token token5 = Token.newBuilder().setTokenstring("notice").setByteoffset(507684).build();
+    Token token6 = Token.newBuilder().setTokenstring("save").setByteoffset(77567).build();
+    Token token7 = Token.newBuilder().setTokenstring("subfolder").setByteoffset(154988).build();
+    Token token8 = Token.newBuilder().setTokenstring("PELCO").setByteoffset(490470).build();
+    Token token9 = Token.newBuilder().setTokenstring("crashed").setByteoffset(301434).build();
+    Token token10 = Token.newBuilder().setTokenstring("audit").setByteoffset(296060).build();
+
+    WikiLinksArticleEvent event = WikiLinksArticleEvent.newBuilder().setUrl(
+        "ftp://38.107.129.5/Training/Training%20Documentation/Latitude%20V6.2%20Training%20Binder/06%20Latitude%206%202%20Release%20Notes_Build%2027.pdf")
+        .setMentions(Arrays.asList(mention1, mention2, mention3, mention4, mention5, mention6, mention7, mention8))
+        .setTokens(Arrays.asList(token1, token2, token3, token4, token5, token6, token7, token8, token9, token10))
+        .build();
+
+    return event;
+  }
+
   public WikiLinksArticleEvent getFirstFileEventFour() {
     Mention mention1 = Mention.newBuilder().setMentionstring("bootstrapping").setByteoffset(598297)
         .setTargeturl("http://en.wikipedia.org/wiki/Bootstrapping").build();

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import net.acilab.stream.processor.kafka.WikiLinksKafkaProducerRunable;
 import net.acilab.stream.processor.kafka.configuration.KafkaProducerThroughputConfigBuilder;
+import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 public class WikiLinksKafkaProducerController implements ProducerController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaProducerController.class);
+
+  private static final int BATCH_SIZE = 3;
 
   private KafkaProducerThroughputConfigBuilder producerConfigBuilder;
   private WikiLinksKafkaProducerRunable producerRunable;
@@ -35,10 +38,10 @@ public class WikiLinksKafkaProducerController implements ProducerController {
     Properties producerConfig = producerConfigBuilder.getProducerConfiguration();
     LOGGER.info("Producer Configuration is: {}", producerConfig);
     String topic = producerConfigBuilder.getTopic();
-    KafkaProducer<Integer, String> producer = new KafkaProducer<>(producerConfig);
+    KafkaProducer<String, WikiLinksArticleEvent> producer = new KafkaProducer<>(producerConfig);
     int fileIndex = 0;
 
-    producerRunable.prepareProducer(producer, topic, fileIndex);
+    producerRunable.prepareProducer(producer, topic, fileIndex, BATCH_SIZE);
     producerRunable.run();
   }
 }

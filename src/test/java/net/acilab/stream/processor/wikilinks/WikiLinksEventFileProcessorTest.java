@@ -50,16 +50,15 @@ public class WikiLinksEventFileProcessorTest {
         .thenReturn(testDataFactory.getEventPointerFileList());
   }
 
-  @Ignore
   @Test
   public void verify_config_and_file_index_input() {
 
-    wikiLinksEventFileProcessor.readNextEvent(0, 1);
+    wikiLinksEventFileProcessor.readEvents(0, 1);
     verify(wikiLinksEventFileConfigBuilderMock, times(1)).getEventPointerFileList();
-    wikiLinksEventFileProcessor.readNextEvent(9, 3);
+    wikiLinksEventFileProcessor.readEvents(9, 3);
     verify(wikiLinksEventFileConfigBuilderMock, times(2)).getEventPointerFileList();
 
-    Object ret = wikiLinksEventFileProcessor.readNextEvent(10, 3);
+    Object ret = wikiLinksEventFileProcessor.readEvents(10, 3);
     assertNull(ret);
   }
 
@@ -86,7 +85,7 @@ public class WikiLinksEventFileProcessorTest {
     deletePointerFile(eventPointerFile);
 
     // read first batch
-    List<Object> retList = wikiLinksEventFileProcessor.readNextEvent(0, BATCH_SIZE);
+    List<Object> retList = wikiLinksEventFileProcessor.readEvents(0, BATCH_SIZE);
     List<WikiLinksArticleEvent> eventList = (List<WikiLinksArticleEvent>) retList.get(0);
     WikiLinksArticleEvent firstEvent = eventList.get(0);
     WikiLinksArticleEvent secondEvent = eventList.get(1);
@@ -107,7 +106,7 @@ public class WikiLinksEventFileProcessorTest {
     assertEquals(1, ret);
 
     // read next batch
-    retList = wikiLinksEventFileProcessor.readNextEvent(0, BATCH_SIZE);
+    retList = wikiLinksEventFileProcessor.readEvents(0, BATCH_SIZE);
     eventList = (List<WikiLinksArticleEvent>) retList.get(0);
     // WikiLinksArticleEvent thirdEvent = eventList.get(0);
     WikiLinksArticleEvent fourthEvent = eventList.get(1);
@@ -133,7 +132,7 @@ public class WikiLinksEventFileProcessorTest {
     updatePointerFile(eventPointerFile, offset);
 
     // read 3 events to hit the end of file
-    List<Object> retList = wikiLinksEventFileProcessor.readNextEvent(0, BATCH_SIZE);
+    List<Object> retList = wikiLinksEventFileProcessor.readEvents(0, BATCH_SIZE);
     List<WikiLinksArticleEvent> eventList = (List<WikiLinksArticleEvent>) retList.get(0);
     WikiLinksArticleEvent lastEvent = eventList.get(1);
     long endOffset = (long) retList.get(1);
@@ -148,7 +147,7 @@ public class WikiLinksEventFileProcessorTest {
     assertEquals(1, ret);
 
     // read again, should return emtpy list as it reaches end of file
-    retList = wikiLinksEventFileProcessor.readNextEvent(0, BATCH_SIZE);
+    retList = wikiLinksEventFileProcessor.readEvents(0, BATCH_SIZE);
     eventList = (List<WikiLinksArticleEvent>) retList.get(0);
     assertTrue(eventList.isEmpty());
   }

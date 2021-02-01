@@ -29,12 +29,11 @@ public class WikiLinksKafkaProducerRunable implements ProducerRunable, Runnable 
   EventFileProcessor eventFileProcessor;
   private Producer<String, WikiLinksArticleEvent> producer;
 
-  // for test purpose
-  private static final boolean RUN_ONCE = true;
-
   private String topic;
   private int fileIndex;
   private int batchSize;
+  // for test purpose
+  private boolean runOnce;
 
   @Inject
   void setEventFileProcessor(WikiLinksEventFileProcessor eventFileProcessor) {
@@ -42,11 +41,12 @@ public class WikiLinksKafkaProducerRunable implements ProducerRunable, Runnable 
   }
 
   public void prepareProducer(Producer<String, WikiLinksArticleEvent> producer, String topic, int fileIndex,
-      int batchSize) {
+      int batchSize, boolean runOnce) {
     this.producer = producer;
     this.topic = topic;
     this.fileIndex = fileIndex;
     this.batchSize = batchSize;
+    this.runOnce = runOnce;
   }
 
   @Override
@@ -100,7 +100,7 @@ public class WikiLinksKafkaProducerRunable implements ProducerRunable, Runnable 
           break;
         }
 
-        if (RUN_ONCE) {
+        if (runOnce) {
           break;
         }
       }

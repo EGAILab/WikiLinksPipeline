@@ -74,10 +74,11 @@ public class WikiLinksKafkaProducerRunableTest {
     String topic = testDataFactory.getTopic();
     int fileIndex = 0;
     int batchSize = 3;
+    boolean runOnce = true;
 
     long endOffset = testDataFactory.getFirstFileOffsets()[3];
 
-    wikiLinksKafkaProducerRunable.prepareProducer(producerMock, topic, fileIndex, batchSize);
+    wikiLinksKafkaProducerRunable.prepareProducer(producerMock, topic, fileIndex, batchSize, runOnce);
     wikiLinksKafkaProducerRunable.run();
 
     verify(wikiLinksEventFileProcessorMock, times(1)).readEvents(fileIndex, batchSize);
@@ -95,8 +96,9 @@ public class WikiLinksKafkaProducerRunableTest {
     String topic = testDataFactory.getTopic();
     int fileIndex = 0;
     int batchSize = 3;
+    boolean runOnce = true;
 
-    wikiLinksKafkaProducerRunable.prepareProducer(producerMock, topic, fileIndex, batchSize);
+    wikiLinksKafkaProducerRunable.prepareProducer(producerMock, topic, fileIndex, batchSize, runOnce);
     wikiLinksKafkaProducerRunable.run();
 
     producerMock.errorNext(new RuntimeException());

@@ -41,7 +41,7 @@ public class WikiLinksKafkaProducerController implements ProducerController {
     KafkaProducer<String, WikiLinksArticleEvent> producer = new KafkaProducer<>(producerConfig);
     int fileIndex = 0;
 
-    producerRunable.prepareProducer(producer, topic, fileIndex, BATCH_SIZE);
+    producerRunable.prepareProducer(producer, topic, fileIndex, BATCH_SIZE, false);
     producerRunable.run();
   }
 }

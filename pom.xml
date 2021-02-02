@@ -29,6 +29,8 @@
 		<mockito-junit-jupiter.version>3.6.28</mockito-junit-jupiter.version>
 		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 		<spring-boot-starter-test.version>2.4.2</spring-boot-starter-test.version>
+		<!-- Guava Dependencies -->
+		<guava.version>30.0-jre</guava.version>
 		<!-- Kafka dependencies -->
 		<confluent.version>5.5.2</confluent.version>
 		<kafka.version>2.5.1</kafka.version>
@@ -110,6 +112,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring-boot-starter-test.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<!-- Guava dependencies -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 		<!-- Kafka dependencies -->
 		<dependency>

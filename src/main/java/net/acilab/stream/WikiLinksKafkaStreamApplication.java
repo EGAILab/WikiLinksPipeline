@@ -25,7 +25,7 @@ public class WikiLinksKafkaStreamApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		producerController.initializeKafkaProducer();
+		producerController.initializeProducer();
 	}
 
 	public static void main(String[] args) {

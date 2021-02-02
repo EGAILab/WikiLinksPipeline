@@ -15,11 +15,14 @@ public class WikiLinksEventFileConfigBuilder implements EventFileConfigBuilder {
   @Value("${event.file.location}")
   private String eventFileLocation;
 
+  @Value("${event.pointer.file.suffix}")
+  private String eventPointerFileSuffix;
+
   @Value("${event.file.names}")
   private String eventFileNames;
 
-  @Value("${event.pointer.file.suffix}")
-  private String eventPointerFileSuffix;
+  @Value("${event.file.number}")
+  private String eventFileNumber;
 
   @Value("${event.file.batch.size}")
   private String eventBatchSize;
@@ -43,6 +46,10 @@ public class WikiLinksEventFileConfigBuilder implements EventFileConfigBuilder {
     List<String> eventPointerFileList = eventFileList.stream().map(s -> s + eventPointerFileSuffix)
         .collect(Collectors.toList());
     return eventPointerFileList;
+  }
+
+  public int getEventFileNumber() {
+    return Integer.parseInt(eventFileNumber);
   }
 
   public int getBatchSize() {

@@ -25,8 +25,15 @@ public class KafkaProducerThroughputConfigBuilder implements KafkaProducerConfig
   @Value("${producer.topic}")
   private String topic;
 
+  @Value("${producer.thread.pool.size}")
+  private String threadPoolSize;
+
   public String getTopic() {
     return topic;
+  }
+
+  public int getThreadPoolSize() {
+    return Integer.parseInt(threadPoolSize);
   }
 
   @Override

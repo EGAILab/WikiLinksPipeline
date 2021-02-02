@@ -38,7 +38,7 @@ public class WikiLinksKafkaProducerControllerTest {
         .thenReturn(testDataFactory.getThroughputProducerProperties());
     when(kafkaProducerThroughputConfigBuilderMock.getTopic()).thenReturn(testDataFactory.getTopic());
 
-    wikiLinksKafkaProducerController.initializeKafkaProducer();
+    wikiLinksKafkaProducerController.initializeProducer();
 
     verify(kafkaProducerThroughputConfigBuilderMock, times(1)).getProducerConfiguration();
     verify(wikiLinksKafkaProducerRunableMock, times(1)).run();

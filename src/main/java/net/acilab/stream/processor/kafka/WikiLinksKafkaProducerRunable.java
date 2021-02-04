@@ -109,8 +109,8 @@ public class WikiLinksKafkaProducerRunable implements ProducerRunable, Runnable 
       e.printStackTrace();
     } finally {
       // Clean up
-      if (producer != null)
-        producer.close();
+      // if (producer != null)
+      // producer.close();
       // LOGGER.info("Producer closed.");
     }
   }

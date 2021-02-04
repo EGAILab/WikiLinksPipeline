@@ -31,6 +31,9 @@
 		<spring-boot-starter-test.version>2.4.2</spring-boot-starter-test.version>
 		<!-- Guava Dependencies -->
 		<guava.version>30.0-jre</guava.version>
+		<!-- Apache Commons Configuration -->
+		<apache-commons-configuration.version>2.7</apache-commons-configuration.version>
+		<apache-commons-beanutils.version>1.9.4</apache-commons-beanutils.version>
 		<!-- Kafka dependencies -->
 		<confluent.version>5.5.2</confluent.version>
 		<kafka.version>2.5.1</kafka.version>
@@ -118,6 +121,17 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
+		</dependency>
+		<!-- Apache dependencies -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-configuration2</artifactId>
+			<version>${apache-commons-configuration.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${apache-commons-beanutils.version}</version>
 		</dependency>
 		<!-- Kafka dependencies -->
 		<dependency>

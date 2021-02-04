@@ -78,3 +78,8 @@ pom - Origin Version:
 				"F:\\Data\\wiki-links_google\\data-7-of-9_pointer.txt",
 				"F:\\Data\\wiki-links_google\\data-8-of-9_pointer.txt",
 				"F:\\Data\\wiki-links_google\\data-9-of-9_pointer.txt" }));
+
+
+    LOGGER.info(String.format("\n\t\t\tkey=%s, value=%s " + "\n\t\t\tsent to topic=%s part=%d off=%d at time=%s",
+        event.key(), event.value().toString(), recordMetadata.topic(), recordMetadata.partition(),
+        recordMetadata.offset(), new Date(recordMetadata.timestamp())));

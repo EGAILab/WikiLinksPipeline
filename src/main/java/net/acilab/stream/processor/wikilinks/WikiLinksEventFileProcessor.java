@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Repository;
 
+import net.acilab.stream.processor.wikilinks.configuration.EventFileConfigBuilder;
 import net.acilab.stream.processor.wikilinks.configuration.WikiLinksEventFileConfigBuilder;
 import net.acilab.stream.processor.wikilinks.exception.EventFileIndexOutOfBoundException;
 import net.acilab.stream.utils.ApplicationConstants;
@@ -30,7 +31,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksEventFileProcessor.class);
 
-  private WikiLinksEventFileConfigBuilder fileConfigBuilder;
+  private EventFileConfigBuilder fileConfigBuilder;
 
   private String eventFile;
   private String eventPointerFile;
@@ -39,7 +40,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
   private RandomAccessFile eventFileStream;
 
   @Inject
-  public WikiLinksEventFileProcessor(WikiLinksEventFileConfigBuilder fileConfigBuilder) {
+  public WikiLinksEventFileProcessor(EventFileConfigBuilder fileConfigBuilder) {
     this.fileConfigBuilder = fileConfigBuilder;
   }
 

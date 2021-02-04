@@ -1,14 +1,12 @@
 package net.acilab.stream.controller;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import net.acilab.stream.processor.kafka.ProducerRunable;
 import net.acilab.stream.processor.kafka.WikiLinksKafkaProducerRunable;
 import net.acilab.stream.processor.kafka.configuration.KafkaProducerConfigBuilder;
 import net.acilab.stream.processor.kafka.configuration.KafkaProducerThroughputConfigBuilder;
@@ -28,7 +26,7 @@ public class WikiLinksKafkaProducerController implements ProducerController {
 
   private KafkaProducerConfigBuilder producerConfigBuilder;
   private WikiLinksEventFileConfigBuilder fileConfigBuilder;
-  private WikiLinksKafkaProducerRunable producerRunable;
+  private ProducerRunable producerRunable;
 
   @Inject
   public WikiLinksKafkaProducerController(KafkaProducerThroughputConfigBuilder producerConfigBuilder,
@@ -48,19 +46,12 @@ public class WikiLinksKafkaProducerController implements ProducerController {
     LOGGER.info("Topic is: {}", topic);
     int threadPoolSize = producerConfigBuilder.getThreadPoolSize();
     LOGGER.info("Thread Pool Size is: {}", threadPoolSize);
-    KafkaProducer<String, WikiLinksArticleEvent> producer = new KafkaProducer<>(producerConfig);
+    final KafkaProducer<String, WikiLinksArticleEvent> producer = new KafkaProducer<>(producerConfig);
     int numberOfFiles = fileConfigBuilder.getEventFileNumber();
     LOGGER.info("Number of file: {}", numberOfFiles);
-    int fileIndex = 0;
 
+    int fileIndex = 0;
     producerRunable.prepareProducer(producer, topic, fileIndex, BATCH_SIZE, false);
     producerRunable.run();
-
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPoolSize);
-    for (int i = 0; i < numberOfFiles; i++) {
-      fileIndex = i;
-      executor.submit(() -> {
-      });
-    }
   }
 }

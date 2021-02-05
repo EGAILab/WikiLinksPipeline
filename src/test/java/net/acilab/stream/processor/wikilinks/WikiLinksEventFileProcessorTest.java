@@ -26,10 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.acilab.stream.TestDataFactory;
+import net.acilab.stream.configuration.WikiLinksAppConfig;
+import net.acilab.stream.configuration.WikiLinksKafkaApplicationConfiguration;
 import net.acilab.stream.processor.wikilinks.configuration.WikiLinksEventFileConfigBuilder;
 import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
 
-@Ignore
+//@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class WikiLinksEventFileProcessorTest {
 
@@ -41,23 +43,22 @@ public class WikiLinksEventFileProcessorTest {
   WikiLinksEventFileProcessor wikiLinksEventFileProcessor;
 
   @Mock
-  WikiLinksEventFileConfigBuilder wikiLinksEventFileConfigBuilderMock;
+  WikiLinksAppConfig wikiLinksAppConfigMock;
 
   @Before
   public void setup() {
 
-    when(wikiLinksEventFileConfigBuilderMock.getEventFiles()).thenReturn(testDataFactory.getEventFileList());
-    when(wikiLinksEventFileConfigBuilderMock.getEventPointerFiles())
-        .thenReturn(testDataFactory.getEventPointerFileList());
+    when(wikiLinksAppConfigMock.getEventFiles()).thenReturn(testDataFactory.getEventFileList());
+    when(wikiLinksAppConfigMock.getEventPointerFiles()).thenReturn(testDataFactory.getEventPointerFileList());
   }
 
   @Test
   public void verify_config_and_file_index_input() {
 
     wikiLinksEventFileProcessor.readEvents(0, 1);
-    verify(wikiLinksEventFileConfigBuilderMock, times(1)).getEventPointerFiles();
+    verify(wikiLinksAppConfigMock, times(1)).getEventPointerFiles();
     wikiLinksEventFileProcessor.readEvents(9, 3);
-    verify(wikiLinksEventFileConfigBuilderMock, times(2)).getEventPointerFiles();
+    verify(wikiLinksAppConfigMock, times(2)).getEventPointerFiles();
 
     Object ret = wikiLinksEventFileProcessor.readEvents(10, 3);
     assertNull(ret);

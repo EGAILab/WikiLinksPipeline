@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +15,10 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Repository;
 
-import net.acilab.stream.processor.wikilinks.configuration.EventFileConfigBuilder;
-import net.acilab.stream.processor.wikilinks.configuration.WikiLinksEventFileConfigBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.acilab.stream.configuration.WikiLinksAppConfig;
 import net.acilab.stream.processor.wikilinks.exception.EventFileIndexOutOfBoundException;
 import net.acilab.stream.utils.ApplicationConstants;
 
@@ -23,15 +26,12 @@ import net.acilab.stream.processor.wikilinks.serialization.Mention;
 import net.acilab.stream.processor.wikilinks.serialization.Token;
 import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Repository
 public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksEventFileProcessor.class);
 
-  private EventFileConfigBuilder fileConfigBuilder;
+  private WikiLinksAppConfig appConfig;
 
   private String eventFile;
   private String eventPointerFile;
@@ -40,8 +40,8 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
   private RandomAccessFile eventFileStream;
 
   @Inject
-  public WikiLinksEventFileProcessor(EventFileConfigBuilder fileConfigBuilder) {
-    this.fileConfigBuilder = fileConfigBuilder;
+  public WikiLinksEventFileProcessor(WikiLinksAppConfig appConfig) {
+    this.appConfig = appConfig;
   }
 
   private long readOffset() throws Exception {
@@ -70,8 +70,8 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
         throw new EventFileIndexOutOfBoundException("Invalid file index: " + fileIndex);
       }
 
-      eventFile = fileConfigBuilder.getEventFiles().get(fileIndex);
-      eventPointerFile = fileConfigBuilder.getEventPointerFiles().get(fileIndex);
+      eventFile = appConfig.getEventFiles().get(fileIndex);
+      eventPointerFile = appConfig.getEventPointerFiles().get(fileIndex);
       LOGGER.info("Event file is: {}", eventFile);
       LOGGER.info("Event pointer file is: {}", eventPointerFile);
 
@@ -149,7 +149,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
   // 0 - failed
   public int commitOffset(long offset, int fileIndex) {
     BufferedWriter commitOffsetBufferWriter;
-    String eventPointerFileToCommit = fileConfigBuilder.getEventPointerFiles().get(fileIndex);
+    String eventPointerFileToCommit = appConfig.getEventPointerFiles().get(fileIndex);
     try {
       commitOffsetBufferWriter = new BufferedWriter(new FileWriter(eventPointerFileToCommit, false));
       commitOffsetBufferWriter.write(Long.toString(offset));

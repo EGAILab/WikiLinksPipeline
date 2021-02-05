@@ -11,11 +11,11 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
-import net.acilab.stream.processor.wikilinks.EventFileProcessor;
-import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.acilab.stream.processor.wikilinks.EventFileProcessor;
+import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
 
 public class WikiLinksKafkaThroughputProducerRunable implements Runnable, WikiLinksKafkaProducer {
 
@@ -41,8 +41,6 @@ public class WikiLinksKafkaThroughputProducerRunable implements Runnable, WikiLi
 
   @Override
   public void run() {
-
-    // final String threadName = Thread.currentThread().getName();
 
     LOGGER.info("=== Starting WikiLinksKafkaThroughputProducer ===");
     LOGGER.info("Producer Topic is: {}", topic);

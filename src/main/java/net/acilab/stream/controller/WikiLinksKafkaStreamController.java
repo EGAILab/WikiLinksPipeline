@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import net.acilab.stream.configuration.WikiLinksKafkaApplicationConfiguration;
 import net.acilab.stream.configuration.WikiLinksKafkaCommonConfigBuilder;
 import net.acilab.stream.processor.kafka.WikiLinksKafkaThroughputProducerRunable;
 import net.acilab.stream.processor.wikilinks.WikiLinksEventFileProcessor;
@@ -23,10 +24,11 @@ public class WikiLinksKafkaStreamController implements StreamController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaStreamController.class);
 
-  private static final WikiLinksKafkaCommonConfigBuilder appConfigBuilder = new WikiLinksKafkaCommonConfigBuilder();
-  private static final String topic = appConfigBuilder.getKafkaProducerTopic();
-  private static final int batchSize = appConfigBuilder.getEventFileReadBatchSize();
-  private static final int threadPoolSize = appConfigBuilder.getKafkaProducerThreadPoolSize();
+  private static final WikiLinksKafkaApplicationConfiguration appConfig = WikiLinksKafkaApplicationConfiguration
+      .getConfiguration();
+  private static final String topic = appConfig.getKafkaProducerTopic();
+  private static final int batchSize = appConfig.getEventFileReadBatchSize();
+  private static final int threadPoolSize = appConfig.getKafkaProducerThreadPoolSize();
   private static boolean runOnce = false;
 
   public void initializeStream() {
@@ -53,11 +55,11 @@ public class WikiLinksKafkaStreamController implements StreamController {
   }
 
   private static Producer<String, WikiLinksArticleEvent> createProducer() {
-    return new KafkaProducer<>(appConfigBuilder.getKafkaThroughputProducerConfiguration());
+    return new KafkaProducer<>(appConfig.getKafkaThroughputProducerConfiguration());
   }
 
   private static WikiLinksEventFileProcessor createEventFileProcessor() {
-    return new WikiLinksEventFileProcessor(appConfigBuilder);
+    return new WikiLinksEventFileProcessor(appConfig);
   }
 
   private static List<WikiLinksKafkaThroughputProducerRunable> getProducerList(
@@ -72,6 +74,7 @@ public class WikiLinksKafkaStreamController implements StreamController {
         new WikiLinksKafkaThroughputProducerRunable(producer, createEventFileProcessor(), topic, 6, batchSize, runOnce),
         new WikiLinksKafkaThroughputProducerRunable(producer, createEventFileProcessor(), topic, 7, batchSize, runOnce),
         new WikiLinksKafkaThroughputProducerRunable(producer, createEventFileProcessor(), topic, 8, batchSize, runOnce),
-        new WikiLinksKafkaThroughputProducerRunable(producer, createEventFileProcessor(), topic, 9, batchSize, runOnce));
+        new WikiLinksKafkaThroughputProducerRunable(producer, createEventFileProcessor(), topic, 9, batchSize,
+            runOnce));
   }
 }

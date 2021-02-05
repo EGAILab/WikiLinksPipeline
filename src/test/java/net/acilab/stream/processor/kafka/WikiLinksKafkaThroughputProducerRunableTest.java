@@ -18,6 +18,9 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.MockProducer;
 import org.apache.kafka.common.serialization.StringSerializer;
+
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,8 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ import net.acilab.stream.processor.wikilinks.EventFileProcessor;
 import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
 import net.acilab.stream.TestDataFactory;
 
-@Ignore
+// @Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class WikiLinksKafkaThroughputProducerRunableTest {
 

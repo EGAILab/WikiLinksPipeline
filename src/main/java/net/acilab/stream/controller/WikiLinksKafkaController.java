@@ -7,29 +7,35 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import net.acilab.stream.configuration.WikiLinksKafkaApplicationConfiguration;
-import net.acilab.stream.configuration.WikiLinksKafkaCommonConfigBuilder;
+import net.acilab.stream.configuration.WikiLinksKafkaAppConfiguration;
 import net.acilab.stream.processor.kafka.WikiLinksKafkaThroughputProducerRunable;
 import net.acilab.stream.processor.wikilinks.WikiLinksEventFileProcessor;
 import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent;
 
-@Component
-public class WikiLinksKafkaStreamController implements StreamController {
+public class WikiLinksKafkaController implements StreamController {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaStreamController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaController.class);
 
-  private static final WikiLinksKafkaApplicationConfiguration appConfig = WikiLinksKafkaApplicationConfiguration
-      .getConfiguration();
-  private static final String topic = appConfig.getKafkaProducerTopic();
-  private static final int batchSize = appConfig.getEventFileReadBatchSize();
-  private static final int threadPoolSize = appConfig.getKafkaProducerThreadPoolSize();
-  private static boolean runOnce = false;
+  private final WikiLinksKafkaAppConfiguration appConfig;
+  private final String topic;
+  private final int batchSize;
+  private final int threadPoolSize;
+  private final boolean runOnce = false;
+
+  public WikiLinksKafkaController(final WikiLinksKafkaAppConfiguration appConfig) {
+    this.appConfig = appConfig;
+    this.topic = appConfig.getKafkaProducerTopic();
+    this.batchSize = appConfig.getEventFileReadBatchSize();
+    this.threadPoolSize = appConfig.getKafkaProducerThreadPoolSize();
+  }
 
   public void initializeStream() {
 
@@ -54,15 +60,15 @@ public class WikiLinksKafkaStreamController implements StreamController {
     }));
   }
 
-  private static Producer<String, WikiLinksArticleEvent> createProducer() {
+  private Producer<String, WikiLinksArticleEvent> createProducer() {
     return new KafkaProducer<>(appConfig.getKafkaThroughputProducerConfiguration());
   }
 
-  private static WikiLinksEventFileProcessor createEventFileProcessor() {
+  private WikiLinksEventFileProcessor createEventFileProcessor() {
     return new WikiLinksEventFileProcessor(appConfig);
   }
 
-  private static List<WikiLinksKafkaThroughputProducerRunable> getProducerList(
+  private List<WikiLinksKafkaThroughputProducerRunable> getProducerList(
       final Producer<String, WikiLinksArticleEvent> producer) {
     return Arrays.asList(
         new WikiLinksKafkaThroughputProducerRunable(producer, createEventFileProcessor(), topic, 0, batchSize, runOnce),

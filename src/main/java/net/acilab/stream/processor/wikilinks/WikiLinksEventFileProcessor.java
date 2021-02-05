@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.acilab.stream.configuration.WikiLinksAppConfig;
+import net.acilab.stream.configuration.WikiLinksKafkaAppConfiguration;
 import net.acilab.stream.processor.wikilinks.exception.EventFileIndexOutOfBoundException;
 import net.acilab.stream.utils.ApplicationConstants;
 
@@ -31,7 +31,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksEventFileProcessor.class);
 
-  private WikiLinksAppConfig appConfig;
+  private WikiLinksKafkaAppConfiguration appConfig;
 
   private String eventFile;
   private String eventPointerFile;
@@ -40,7 +40,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
   private RandomAccessFile eventFileStream;
 
   @Inject
-  public WikiLinksEventFileProcessor(WikiLinksAppConfig appConfig) {
+  public WikiLinksEventFileProcessor(WikiLinksKafkaAppConfiguration appConfig) {
     this.appConfig = appConfig;
   }
 

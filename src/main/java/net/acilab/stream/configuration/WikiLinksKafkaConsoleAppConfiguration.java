@@ -11,17 +11,21 @@ import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 
-public class WikiLinksKafkaApplicationConfiguration implements WikiLinksAppConfig, KafkaProducerAppConfig {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaApplicationConfiguration.class);
+import org.springframework.stereotype.Component;
 
-  private static volatile WikiLinksKafkaApplicationConfiguration configurationInstance = null;
+@Component
+public class WikiLinksKafkaConsoleAppConfiguration implements WikiLinksKafkaAppConfiguration {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaConsoleAppConfiguration.class);
+
+  private static volatile WikiLinksKafkaConsoleAppConfiguration configurationInstance = null;
 
   // Kafka properties
   private final String kafkaBootStrapServers;
@@ -36,7 +40,7 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksAppConfi
   private final String eventFileTotal;
   private final String eventFileReadBatchSize;
 
-  private WikiLinksKafkaApplicationConfiguration() {
+  private WikiLinksKafkaConsoleAppConfiguration() {
 
     if (configurationInstance != null) {
       throw new RuntimeException("Use getConfiguration() to create configuration.");
@@ -65,11 +69,11 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksAppConfi
     eventFileReadBatchSize = configuration.getString("event.file.read.batch.size");
   }
 
-  public static WikiLinksKafkaApplicationConfiguration getConfiguration() {
+  public static WikiLinksKafkaConsoleAppConfiguration getConfiguration() {
     if (configurationInstance == null) {
-      synchronized (WikiLinksKafkaApplicationConfiguration.class) {
+      synchronized (WikiLinksKafkaConsoleAppConfiguration.class) {
         if (configurationInstance == null) {
-          configurationInstance = new WikiLinksKafkaApplicationConfiguration();
+          configurationInstance = new WikiLinksKafkaConsoleAppConfiguration();
         }
       }
     }

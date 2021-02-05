@@ -1,8 +1,15 @@
-package net.acilab.stream.processor.wikilinks.configuration;
+package net.acilab.stream.configuration;
 
 import java.util.List;
+import java.util.Properties;
 
-public interface EventFileConfigBuilder {
+public interface WikiLinksKafkaAppConfiguration {
+
+  public String getKafkaProducerTopic();
+
+  public int getKafkaProducerThreadPoolSize();
+
+  public Properties getKafkaThroughputProducerConfiguration();
 
   public String getEventFileLocation();
 

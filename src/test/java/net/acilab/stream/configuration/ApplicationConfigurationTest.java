@@ -10,23 +10,24 @@ import java.util.concurrent.Executors;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.acilab.stream.TestDataFactory;
 
-@Ignore
+// @Ignore
 public class ApplicationConfigurationTest {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationConfigurationTest.class);
 
   TestDataFactory testDataFactory = new TestDataFactory();
 
-  private WikiLinksKafkaApplicationConfiguration config;
+  private WikiLinksKafkaConsoleAppConfiguration config;
 
   @Before
   public void setup() {
-    config = WikiLinksKafkaApplicationConfiguration.getConfiguration();
+    config = WikiLinksKafkaConsoleAppConfiguration.getConfiguration();
   }
 
   @Test
@@ -60,7 +61,7 @@ public class ApplicationConfigurationTest {
   private class ConfigRunable implements Runnable {
 
     public void run() {
-      WikiLinksKafkaApplicationConfiguration config = WikiLinksKafkaApplicationConfiguration.getConfiguration();
+      WikiLinksKafkaConsoleAppConfiguration config = WikiLinksKafkaConsoleAppConfiguration.getConfiguration();
       String threadName = Thread.currentThread().getName();
       LOGGER.info("In thread: {}, Topic is: {}", threadName, config.getKafkaProducerTopic());
 

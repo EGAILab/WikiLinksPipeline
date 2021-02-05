@@ -18,7 +18,8 @@ import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.acilab.stream.configuration.WikiLinksKafkaAppConfiguration;
+import net.acilab.stream.configuration.WikiLinksKafkaAppConfig;
+import net.acilab.stream.configuration.WikiLinksKafkaApplicationConfiguration;
 import net.acilab.stream.processor.wikilinks.exception.EventFileIndexOutOfBoundException;
 import net.acilab.stream.utils.ApplicationConstants;
 
@@ -31,18 +32,13 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksEventFileProcessor.class);
 
-  private WikiLinksKafkaAppConfiguration appConfig;
+  private static final WikiLinksKafkaAppConfig appConfig = WikiLinksKafkaApplicationConfiguration.getConfiguration();
 
   private String eventFile;
   private String eventPointerFile;
   private BufferedReader bufferReader;
   private BufferedWriter bufferWriter;
   private RandomAccessFile eventFileStream;
-
-  @Inject
-  public WikiLinksEventFileProcessor(WikiLinksKafkaAppConfiguration appConfig) {
-    this.appConfig = appConfig;
-  }
 
   private long readOffset() throws Exception {
     if (!(new File(eventPointerFile).exists())) {
@@ -58,7 +54,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
   @Override
   public List<Object> readEvents(int fileIndex, int batchSize) {
-    LOGGER.info("=== Starting WikiLinksEventFileProcessor ===");
+    // LOGGER.info("=== Starting WikiLinksEventFileProcessor ===");
 
     List<Object> mentions = new ArrayList<Object>();
     List<Object> tokens = new ArrayList<Object>();
@@ -72,11 +68,11 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
 
       eventFile = appConfig.getEventFiles().get(fileIndex);
       eventPointerFile = appConfig.getEventPointerFiles().get(fileIndex);
-      LOGGER.info("Event file is: {}", eventFile);
-      LOGGER.info("Event pointer file is: {}", eventPointerFile);
+      // LOGGER.info("Event file is: {}", eventFile);
+      // LOGGER.info("Event pointer file is: {}", eventPointerFile);
 
       long initOffset = readOffset();
-      LOGGER.info("Read starting from offset: {}", initOffset);
+      LOGGER.info("Reading offset: {} from file index: {}", initOffset, fileIndex);
       eventFileStream = new RandomAccessFile(eventFile, "r");
       eventFileStream.seek(initOffset);
 

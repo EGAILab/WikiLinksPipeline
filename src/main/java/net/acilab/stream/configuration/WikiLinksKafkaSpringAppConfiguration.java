@@ -19,7 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 @Qualifier("Spring")
 @Configuration("WikiLinksKafkaSpringConfiguration")
 @PropertySource("classpath:application.properties")
-public class WikiLinksKafkaSpringAppConfiguration implements WikiLinksKafkaAppConfiguration {
+public class WikiLinksKafkaSpringAppConfiguration implements WikiLinksKafkaAppConfig {
 
   // Kafka properties
 

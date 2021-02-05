@@ -23,11 +23,11 @@ public class ApplicationConfigurationTest {
 
   TestDataFactory testDataFactory = new TestDataFactory();
 
-  private WikiLinksKafkaConsoleAppConfiguration config;
+  private WikiLinksKafkaApplicationConfiguration config;
 
   @Before
   public void setup() {
-    config = WikiLinksKafkaConsoleAppConfiguration.getConfiguration();
+    config = WikiLinksKafkaApplicationConfiguration.getConfiguration();
   }
 
   @Test
@@ -61,7 +61,7 @@ public class ApplicationConfigurationTest {
   private class ConfigRunable implements Runnable {
 
     public void run() {
-      WikiLinksKafkaConsoleAppConfiguration config = WikiLinksKafkaConsoleAppConfiguration.getConfiguration();
+      WikiLinksKafkaApplicationConfiguration config = WikiLinksKafkaApplicationConfiguration.getConfiguration();
       String threadName = Thread.currentThread().getName();
       LOGGER.info("In thread: {}, Topic is: {}", threadName, config.getKafkaProducerTopic());
 

@@ -21,11 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WikiLinksKafkaConsoleAppConfiguration implements WikiLinksKafkaAppConfiguration {
+public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaAppConfig {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaConsoleAppConfiguration.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaApplicationConfiguration.class);
 
-  private static volatile WikiLinksKafkaConsoleAppConfiguration configurationInstance = null;
+  private static volatile WikiLinksKafkaApplicationConfiguration configurationInstance = null;
 
   // Kafka properties
   private final String kafkaBootStrapServers;
@@ -40,7 +40,7 @@ public class WikiLinksKafkaConsoleAppConfiguration implements WikiLinksKafkaAppC
   private final String eventFileTotal;
   private final String eventFileReadBatchSize;
 
-  private WikiLinksKafkaConsoleAppConfiguration() {
+  private WikiLinksKafkaApplicationConfiguration() {
 
     if (configurationInstance != null) {
       throw new RuntimeException("Use getConfiguration() to create configuration.");
@@ -69,11 +69,11 @@ public class WikiLinksKafkaConsoleAppConfiguration implements WikiLinksKafkaAppC
     eventFileReadBatchSize = configuration.getString("event.file.read.batch.size");
   }
 
-  public static WikiLinksKafkaConsoleAppConfiguration getConfiguration() {
+  public static WikiLinksKafkaApplicationConfiguration getConfiguration() {
     if (configurationInstance == null) {
-      synchronized (WikiLinksKafkaConsoleAppConfiguration.class) {
+      synchronized (WikiLinksKafkaApplicationConfiguration.class) {
         if (configurationInstance == null) {
-          configurationInstance = new WikiLinksKafkaConsoleAppConfiguration();
+          configurationInstance = new WikiLinksKafkaApplicationConfiguration();
         }
       }
     }

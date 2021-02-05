@@ -3,7 +3,7 @@ package net.acilab.stream.configuration;
 import java.util.List;
 import java.util.Properties;
 
-public interface WikiLinksKafkaAppConfiguration {
+public interface WikiLinksKafkaAppConfig {
 
   public String getKafkaProducerTopic();
 

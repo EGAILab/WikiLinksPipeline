@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import net.acilab.stream.configuration.WikiLinksAppConfig;
+
 @Configuration("WikiLinksEventFileConfigBuilder")
 @PropertySource("classpath:wikilinks.properties")
-public class WikiLinksEventFileConfigBuilder implements EventFileConfigBuilder {
+public class WikiLinksEventFileConfigBuilder implements EventFileConfigBuilder, WikiLinksAppConfig {
 
   @Value("${event.file.location}")
   private String eventFileLocation;
@@ -35,24 +37,24 @@ public class WikiLinksEventFileConfigBuilder implements EventFileConfigBuilder {
     return Arrays.asList(eventFileNames.split(","));
   }
 
-  public List<String> getEventFileList() {
+  public List<String> getEventFiles() {
     List<String> fileNameList = getEventFileNames();
     List<String> eventFileList = fileNameList.stream().map(s -> eventFileLocation + s).collect(Collectors.toList());
     return eventFileList;
   }
 
-  public List<String> getEventPointerFileList() {
-    List<String> eventFileList = getEventFileList();
+  public List<String> getEventPointerFiles() {
+    List<String> eventFileList = getEventFiles();
     List<String> eventPointerFileList = eventFileList.stream().map(s -> s + eventPointerFileSuffix)
         .collect(Collectors.toList());
     return eventPointerFileList;
   }
 
-  public int getEventFileNumber() {
+  public int getEventFileTotal() {
     return Integer.parseInt(eventFileNumber);
   }
 
-  public int getBatchSize() {
+  public int getEventFileReadBatchSize() {
     return Integer.parseInt(eventBatchSize);
   }
 }

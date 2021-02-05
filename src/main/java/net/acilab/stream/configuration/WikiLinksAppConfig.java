@@ -1,8 +1,8 @@
-package net.acilab.stream.processor.wikilinks.configuration;
+package net.acilab.stream.configuration;
 
 import java.util.List;
 
-public interface EventFileConfigBuilder {
+public interface WikiLinksAppConfig {
 
   public String getEventFileLocation();
 

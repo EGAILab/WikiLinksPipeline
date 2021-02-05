@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
+import net.acilab.stream.configuration.KafkaProducerAppConfig;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration("KafkaProducerThroughputConfigBuilder")
 @PropertySource("classpath:kafka.properties")
-public class KafkaProducerThroughputConfigBuilder implements KafkaProducerConfigBuilder {
+public class KafkaProducerThroughputConfigBuilder implements KafkaProducerConfigBuilder, KafkaProducerAppConfig {
 
   @Value("${kafka.bootstrap.server}")
   private String kafkaBootStrapServers;
@@ -28,16 +29,16 @@ public class KafkaProducerThroughputConfigBuilder implements KafkaProducerConfig
   @Value("${producer.thread.pool.size}")
   private String threadPoolSize;
 
-  public String getTopic() {
+  public String getKafkaProducerTopic() {
     return topic;
   }
 
-  public int getThreadPoolSize() {
+  public int getKafkaProducerThreadPoolSize() {
     return Integer.parseInt(threadPoolSize);
   }
 
   @Override
-  public Properties getProducerConfiguration() {
+  public Properties getKafkaThroughputProducerConfiguration() {
     Properties config = new Properties();
     config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootStrapServers);
     config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());

@@ -17,9 +17,9 @@ import net.acilab.stream.processor.wikilinks.serialization.WikiLinksArticleEvent
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WikiLinksKafkaThroughputProducer implements Runnable, WikiLinksKafkaProducer {
+public class WikiLinksKafkaThroughputProducerRunable implements Runnable, WikiLinksKafkaProducer {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaThroughputProducer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaThroughputProducerRunable.class);
 
   private final Producer<String, WikiLinksArticleEvent> producer;
   private final EventFileProcessor eventFileProcessor;
@@ -29,7 +29,7 @@ public class WikiLinksKafkaThroughputProducer implements Runnable, WikiLinksKafk
   private final boolean runOnce;
 
   @Inject
-  public WikiLinksKafkaThroughputProducer(Producer<String, WikiLinksArticleEvent> producer,
+  public WikiLinksKafkaThroughputProducerRunable(Producer<String, WikiLinksArticleEvent> producer,
       EventFileProcessor eventFileProcessor, String topic, int fileIndex, int batchSize, boolean runOnce) {
     this.producer = producer;
     this.eventFileProcessor = eventFileProcessor;

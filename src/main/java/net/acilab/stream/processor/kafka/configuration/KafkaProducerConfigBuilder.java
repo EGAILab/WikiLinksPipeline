@@ -4,9 +4,9 @@ import java.util.Properties;
 
 public interface KafkaProducerConfigBuilder {
 
-  String getTopic();
+  String getKafkaProducerTopic();
 
-  int getThreadPoolSize();
+  int getKafkaProducerThreadPoolSize();
 
-  Properties getProducerConfiguration();
+  Properties getKafkaThroughputProducerConfiguration();
 }

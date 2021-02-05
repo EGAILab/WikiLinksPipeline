@@ -70,8 +70,8 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
         throw new EventFileIndexOutOfBoundException("Invalid file index: " + fileIndex);
       }
 
-      eventFile = fileConfigBuilder.getEventFileList().get(fileIndex);
-      eventPointerFile = fileConfigBuilder.getEventPointerFileList().get(fileIndex);
+      eventFile = fileConfigBuilder.getEventFiles().get(fileIndex);
+      eventPointerFile = fileConfigBuilder.getEventPointerFiles().get(fileIndex);
       LOGGER.info("Event file is: {}", eventFile);
       LOGGER.info("Event pointer file is: {}", eventPointerFile);
 
@@ -149,7 +149,7 @@ public class WikiLinksEventFileProcessor implements EventFileProcessor {
   // 0 - failed
   public int commitOffset(long offset, int fileIndex) {
     BufferedWriter commitOffsetBufferWriter;
-    String eventPointerFileToCommit = fileConfigBuilder.getEventPointerFileList().get(fileIndex);
+    String eventPointerFileToCommit = fileConfigBuilder.getEventPointerFiles().get(fileIndex);
     try {
       commitOffsetBufferWriter = new BufferedWriter(new FileWriter(eventPointerFileToCommit, false));
       commitOffsetBufferWriter.write(Long.toString(offset));

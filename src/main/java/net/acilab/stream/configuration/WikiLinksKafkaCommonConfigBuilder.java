@@ -19,9 +19,10 @@ import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import net.acilab.stream.processor.kafka.configuration.KafkaProducerConfigBuilder;
 import net.acilab.stream.processor.wikilinks.configuration.EventFileConfigBuilder;
 
-public class WikiLinksKafkaAppConfigBuilder implements EventFileConfigBuilder, KafkaProducerConfigBuilder {
+public class WikiLinksKafkaCommonConfigBuilder
+    implements EventFileConfigBuilder, KafkaProducerConfigBuilder, WikiLinksAppConfig, KafkaProducerAppConfig {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaAppConfigBuilder.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaCommonConfigBuilder.class);
 
   // Producer properties
   private String kafkaBootStrapServers;
@@ -36,7 +37,7 @@ public class WikiLinksKafkaAppConfigBuilder implements EventFileConfigBuilder, K
   private String eventFileNumber;
   private String eventBatchSize;
 
-  public WikiLinksKafkaAppConfigBuilder() {
+  public WikiLinksKafkaCommonConfigBuilder() {
     Configurations configBuilder = new Configurations();
 
     try {
@@ -58,20 +59,21 @@ public class WikiLinksKafkaAppConfigBuilder implements EventFileConfigBuilder, K
     } catch (ConfigurationException cex) {
       LOGGER.error("Unable to open configuration file. Error is: {}", cex);
       cex.printStackTrace();
+      System.exit(0);
     }
   }
 
   /* Producer Configs */
 
-  public String getTopic() {
+  public String getKafkaProducerTopic() {
     return topic;
   }
 
-  public int getThreadPoolSize() {
+  public int getKafkaProducerThreadPoolSize() {
     return Integer.parseInt(threadPoolSize);
   }
 
-  public Properties getProducerConfiguration() {
+  public Properties getKafkaThroughputProducerConfiguration() {
     Properties config = new Properties();
     config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootStrapServers);
     config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -95,24 +97,24 @@ public class WikiLinksKafkaAppConfigBuilder implements EventFileConfigBuilder, K
     return Arrays.asList(eventFileNames.split(","));
   }
 
-  public List<String> getEventFileList() {
+  public List<String> getEventFiles() {
     List<String> fileNameList = getEventFileNames();
     List<String> eventFileList = fileNameList.stream().map(s -> eventFileLocation + s).collect(Collectors.toList());
     return eventFileList;
   }
 
-  public List<String> getEventPointerFileList() {
-    List<String> eventFileList = getEventFileList();
+  public List<String> getEventPointerFiles() {
+    List<String> eventFileList = getEventFiles();
     List<String> eventPointerFileList = eventFileList.stream().map(s -> s + eventPointerFileSuffix)
         .collect(Collectors.toList());
     return eventPointerFileList;
   }
 
-  public int getEventFileNumber() {
+  public int getEventFileTotal() {
     return Integer.parseInt(eventFileNumber);
   }
 
-  public int getBatchSize() {
+  public int getEventFileReadBatchSize() {
     return Integer.parseInt(eventBatchSize);
   }
 }

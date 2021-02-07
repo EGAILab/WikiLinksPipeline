@@ -27,7 +27,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application.properties")
 public class WikiLinksKafkaSpringAppConfiguration implements WikiLinksKafkaAppConfig {
 
-  // Kafka properties
+  // Kafka Producer properties
 
   @Value("${kafka.bootstrap.servers}")
   private String kafkaBootStrapServers;
@@ -40,6 +40,14 @@ public class WikiLinksKafkaSpringAppConfiguration implements WikiLinksKafkaAppCo
 
   @Value("${kafka.producer.thread.pool.size}")
   private String kafkaProducerThreadPoolSize;
+
+  // Kafka Consumer properties
+
+  @Value("${kafka.consumer.group.id.config}")
+  private String kafkaConsumerGroupIdConfig;
+
+  @Value("${kafka.consumer.auto.offset.reset.config}")
+  private String kafkaConsumerAutoOffsetResetConfig;
 
   @Value("${kafka.consumer.max.pool.records}")
   private String kafkaConsumerMaxPoolRecords;
@@ -94,6 +102,8 @@ public class WikiLinksKafkaSpringAppConfiguration implements WikiLinksKafkaAppCo
 
     // Specific config
     config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, kafkaConsumerMaxPoolRecords);
+    config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConsumerGroupIdConfig);
+    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConsumerAutoOffsetResetConfig);
 
     return config;
   }

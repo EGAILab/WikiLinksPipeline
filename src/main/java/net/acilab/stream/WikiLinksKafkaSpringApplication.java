@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import net.acilab.stream.configuration.WikiLinksKafkaSpringAppConfiguration;
 import net.acilab.stream.controller.StreamController;
-import net.acilab.stream.controller.WikiLinksEnrichmentController;
+import net.acilab.stream.controller.WikiLinksEnrichmentSimpleController;
 import net.acilab.stream.controller.WikiLinksKafkaController;
 import net.acilab.stream.controller.WikiLinksKafkaSpringController;
 
@@ -26,7 +26,7 @@ public class WikiLinksKafkaSpringApplication implements CommandLineRunner {
 	private WikiLinksKafkaSpringAppConfiguration appConfig;
 
 	@Autowired
-	private WikiLinksEnrichmentController consumerController;
+	private WikiLinksEnrichmentSimpleController consumerController;
 
 	@Override
 	public void run(String... args) throws Exception {

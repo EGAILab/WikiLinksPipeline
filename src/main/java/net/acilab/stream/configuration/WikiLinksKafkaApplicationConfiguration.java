@@ -39,6 +39,8 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaApp
   private final String kafkaSchemaRegistryUrl;
   private final String kafkaProducerTopic;
   private final String kafkaProducerThreadPoolSize;
+  private final String kafkaConsumerGroupIdConfig;
+  private final String kafkaConsumerAutoOffsetResetConfig;
   private final String kafkaConsumerMaxPoolRecords;
   private final String kafkaConsumerNumStreamThreads;
 
@@ -70,6 +72,9 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaApp
     kafkaSchemaRegistryUrl = configuration.getString("kafka.schema.registry.url");
     kafkaProducerTopic = configuration.getString("kafka.producer.topic");
     kafkaProducerThreadPoolSize = configuration.getString("kafka.producer.thread.pool.size");
+
+    kafkaConsumerGroupIdConfig = configuration.getString("kafka.consumer.group.id.config");
+    kafkaConsumerAutoOffsetResetConfig = configuration.getString("kafka.consumer.auto.offset.reset.config");
     kafkaConsumerMaxPoolRecords = configuration.getString("kafka.consumer.max.pool.records");
     kafkaConsumerNumStreamThreads = configuration.getString("kafka.consumer.num.stream.threads");
 
@@ -114,9 +119,10 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaApp
     config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
     config.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, kafkaSchemaRegistryUrl);
     config.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
-
     // Specific config
     config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, kafkaConsumerMaxPoolRecords);
+    config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConsumerGroupIdConfig);
+    config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConsumerAutoOffsetResetConfig);
 
     return config;
   }

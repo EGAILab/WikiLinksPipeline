@@ -9,9 +9,16 @@ import java.util.stream.Collectors;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.streams.StreamsConfig;
 
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import io.confluent.kafka.serializers.KafkaAvroDeserializer;
+import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 
@@ -32,6 +39,8 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaApp
   private final String kafkaSchemaRegistryUrl;
   private final String kafkaProducerTopic;
   private final String kafkaProducerThreadPoolSize;
+  private final String kafkaConsumerMaxPoolRecords;
+  private final String kafkaConsumerNumStreamThreads;
 
   // Event file properties
   private final String eventFileLocation;
@@ -61,6 +70,8 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaApp
     kafkaSchemaRegistryUrl = configuration.getString("kafka.schema.registry.url");
     kafkaProducerTopic = configuration.getString("kafka.producer.topic");
     kafkaProducerThreadPoolSize = configuration.getString("kafka.producer.thread.pool.size");
+    kafkaConsumerMaxPoolRecords = configuration.getString("kafka.consumer.max.pool.records");
+    kafkaConsumerNumStreamThreads = configuration.getString("kafka.consumer.num.stream.threads");
 
     eventFileLocation = configuration.getString("event.file.location");
     eventFilePointerFileSuffix = configuration.getString("event.file.pointer.file.suffix");
@@ -93,6 +104,41 @@ public class WikiLinksKafkaApplicationConfiguration implements WikiLinksKafkaApp
     config.put(ProducerConfig.LINGER_MS_CONFIG, "5");
     config.put(ProducerConfig.BATCH_SIZE_CONFIG, "16384");
     config.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "10");
+    return config;
+  }
+
+  public Properties getKafkaConsumerConfiguration() {
+    Properties config = new Properties();
+    config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootStrapServers);
+    config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+    config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
+    config.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, kafkaSchemaRegistryUrl);
+    config.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
+
+    // Specific config
+    config.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, kafkaConsumerMaxPoolRecords);
+
+    return config;
+  }
+
+  // not working
+  public Properties getKafkaConsumerConfiguration_CBA() {
+    Properties config = new Properties();
+    // config.put(StreamsConfig.APPLICATION_ID_CONFIG, "");
+    config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootStrapServers);
+    // config.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
+    // kafkaSchemaRegistryUrl);
+    config.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, kafkaSchemaRegistryUrl);
+    config.put(StreamsConfig.CONSUMER_PREFIX + AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
+        kafkaSchemaRegistryUrl);
+    // config.put(StreamsConfig.CONSUMER_PREFIX +
+    // ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG,
+    // "au.com.commbank.kafka.toolkit.logging.client.KafkaConsumerInterceptor");
+    config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, StringDeserializer.class.getName());
+    config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, KafkaAvroDeserializer.class);
+    config.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, kafkaConsumerNumStreamThreads);
+    // config.put(StreamsConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+    // config.put(StreamsConfig.SESSION_TIMEOUT_MS_CONFIG, 30000);
     return config;
   }
 

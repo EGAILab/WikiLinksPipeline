@@ -1,11 +1,13 @@
 package net.acilab.stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import net.acilab.stream.configuration.WikiLinksKafkaSpringAppConfiguration;
 import net.acilab.stream.controller.StreamController;
+import net.acilab.stream.controller.WikiLinksEnrichmentController;
 import net.acilab.stream.controller.WikiLinksKafkaController;
 import net.acilab.stream.controller.WikiLinksKafkaSpringController;
 
@@ -19,22 +21,22 @@ public class WikiLinksKafkaSpringApplication implements CommandLineRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinksKafkaSpringApplication.class);
 
-	// Spring Config
+	// Spring Producer
+	@Autowired
 	private WikiLinksKafkaSpringAppConfiguration appConfig;
 
-	// Spring Config
-	@Inject
-	public WikiLinksKafkaSpringApplication(WikiLinksKafkaSpringAppConfiguration appConfig) {
-		this.appConfig = appConfig;
-	}
+	@Autowired
+	private WikiLinksEnrichmentController consumerController;
 
 	@Override
 	public void run(String... args) throws Exception {
-		// Spring Config
-		StreamController controller = new WikiLinksKafkaSpringController(appConfig);
-		// Console Config
+		// Spring Producer
+		// StreamController controller = new WikiLinksKafkaSpringController(appConfig);
+		// Console Producer
 		// StreamController controller = new WikiLinksKafkaController();
-		controller.initializeStream();
+		// producerController.initializeStream();
+
+		consumerController.initializeStream();
 	}
 
 	public static void main(String[] args) {

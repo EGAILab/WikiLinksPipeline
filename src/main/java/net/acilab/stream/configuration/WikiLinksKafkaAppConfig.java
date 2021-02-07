@@ -11,6 +11,8 @@ public interface WikiLinksKafkaAppConfig {
 
   public Properties getKafkaThroughputProducerConfiguration();
 
+  public Properties getKafkaConsumerConfiguration();
+
   public String getEventFileLocation();
 
   public List<String> getEventFileNames();
